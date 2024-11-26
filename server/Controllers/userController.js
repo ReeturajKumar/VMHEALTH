@@ -1,4 +1,6 @@
 import User from "../Models/userSchema.js";
+import Booking from "../Models/bookingSchema.js";
+import Doctor from "../Models/doctorSchema.js";
 
 // updating user
 export const updateUser = async (req, res) => {
@@ -86,4 +88,58 @@ export const getAllUser = async (req, res) => {
     });
   }
 };
+
+
+// user profile
+export const getUserProfile = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const { password, ...rest } = user._doc;
+
+    res.status(200).json({
+      success: true,
+      message: "User profile found successfully",
+      data: {...rest}
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to find user profile",
+    });
+  }
+};
+
+
+
+export const getMyAppointments = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.userId });
+
+    const doctorsIds = bookings.map(el=> el.doctor.id);
+
+
+    const doctors = await Doctor.find({ _id: { $in: doctorsIds } }).select("-password");
+
+    res.status(200).json({  
+      success: true,
+      message: "Appointments found successfully",
+      data: doctors ,
+    }); 
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to find appointments",
+    });
+  }
+}
 

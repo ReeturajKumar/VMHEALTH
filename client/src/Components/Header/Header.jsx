@@ -78,28 +78,34 @@ const Header = () => {
           </div>
 
           {/* Nav right */}
-          <div className="flex items-center gap-4">
-            {token && user ? (
-              <div>
-                <Link to={`${role === 'doctor' ? '/doctors/profile/me' : '/users/profile/me'}`}>
-                  <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
-                    
-                    <img src={user?.photo || avatar} className="w-full rounded-full" alt="User Profile" />
-                  </figure>
-                </Link>
-              </div>
-            ) : (
-              <Link to="/login">
-                <button className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]">
-                  Login
-                </button>
-              </Link>
-            )}
 
-            <span className="md:hidden" onClick={toggleMenu}>
-              <RiMenu3Line className="w-6 h-6 cursor-pointer" />
-            </span>
-          </div>
+{/* Nav right */}
+<div className="flex items-center gap-4">
+  {token && user ? (
+    <div>
+      <Link to={`${role === 'doctor' ? '/doctors/profile/me' : '/user/profile/me'}`}>
+        <figure className="w-[35px] h-[35px] rounded-full overflow-hidden cursor-pointer border border-gray-300">
+          <img
+            src={user?.photo || avatar}
+            className="w-full h-full object-cover"
+            alt="User Profile"
+          />
+        </figure>
+      </Link>
+    </div>
+  ) : (
+    <Link to="/login">
+      <button className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]">
+        Login
+      </button>
+    </Link>
+  )}
+
+  <span className="md:hidden" onClick={toggleMenu}>
+    <RiMenu3Line className="w-6 h-6 cursor-pointer" />
+  </span>
+</div>
+
         </div>
       </div>
     </header>

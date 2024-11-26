@@ -61,6 +61,7 @@ const authReducer = (state, action) => {
 };
 
 // AuthContext Provider Component
+// eslint-disable-next-line react/prop-types
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
