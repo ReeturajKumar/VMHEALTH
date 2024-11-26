@@ -1,40 +1,47 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { token } from "../config";
 
 const useFetchData = (url) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    let isMounted = true; 
+
     const fetchData = async () => {
       try {
         setLoading(true);
         const res = await fetch(url, {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         });
         const result = await res.json();
         if (!res.ok) {
-          throw new Error(result.msg + '');
+          throw new Error(result.msg || "An error occurred while fetching data");
         }
 
-        setData(result.data);
-        setLoading(false);
+        if (isMounted) {
+          setData(result.data);
+          setLoading(false);
+        }
       } catch (error) {
-        setLoading(false);
-        setError(error.message);
+        if (isMounted) {
+          setLoading(false);
+          setError(error.message);
+        }
       }
-    }
+    };
 
-    fetchData()
-  }, [url])
-  return {
-    data,
-    loading,
-    error
-  }
-}
+    fetchData();
 
-export default useFetchData
+    return () => {
+      isMounted = false; // Cleanup
+    };
+  }, [url]);
+
+  return { data, loading, error };
+};
+
+export default useFetchData;

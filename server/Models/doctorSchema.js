@@ -1,60 +1,33 @@
 import mongoose from "mongoose";
 
 const DoctorSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: Number,
-  },
-  photo : {
-    type: String,
-  },
-   ticketPrice: {
-    type: Number,
-  },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  name: { type: String, required: true },
+  phone: { type: Number },
+  photo: { type: String },
+  ticketPrice: { type: Number },
   role: {
     type: String,
   },
 
-  specialization: {
-    type: String,
+  // Fields for doctors only
+  specialization: { type: String },
+  qualifications: {
+    type: Array,
   },
-  qualification: {
-    type: Array
+
+  experiences: {
+    type: Array,
   },
-  experinces: {
-    type: Array
-  },
-  bio : {
-    type: String,
-    maxLength: 500,
-  },
-  about : {
-    type: String,
-  },
-  timeSlots : {
-    type: Array
-  },
-  reviews: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Review"
-    }
-  ],
+
+  bio: { type: String, maxLength: 50 },
+  about: { type: String },
+  timeSlots: { type: Array },
+  reviews: [{ type: mongoose.Types.ObjectId, ref: "Review" }],
   averageRating: {
     type: Number,
-    default: 0
+    default: 0,
   },
   totalRating: {
     type: Number,
@@ -62,14 +35,10 @@ const DoctorSchema = new mongoose.Schema({
   },
   isApproved: {
     type: String,
-    enum: ["Pending", "Approved", "Rejected"],
-    default: "Pending"
+    enum: ["pending", "approved", "cancelled"],
+    default: "pending",
   },
-  appointmenst: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Appointment",
-    }
-  ]
+  appointments: [{ type: mongoose.Types.ObjectId, ref: "Appointment" }],
 });
-export default mongoose.model("Doctor", DoctorSchema)
+
+export default mongoose.model("Doctor", DoctorSchema);

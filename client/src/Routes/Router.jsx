@@ -22,7 +22,7 @@ const Router = () => {
       <Route path="/contact-us" element={<ContactUs />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/user/profile/me" element={<ProtectedRoutes allowedRoles={['patient']}><MyAccount /></ProtectedRoutes>} />
-      <Route path="/doctors/profile/me" element={<ProtectedRoutes allowedRoles={['doctor']}><Dashboard /></ProtectedRoutes>} />
+      <Route path="/doctor/profile/me" element={<ProtectedRoutes allowedRoles={['doctor']}><Dashboard /></ProtectedRoutes>} />
     </Routes>
   );
 };

@@ -83,7 +83,7 @@ const Header = () => {
 <div className="flex items-center gap-4">
   {token && user ? (
     <div>
-      <Link to={`${role === 'doctor' ? '/doctors/profile/me' : '/user/profile/me'}`}>
+      <Link to={`${role === 'doctor' ? '/doctor/profile/me' : '/user/profile/me'}`}>
         <figure className="w-[35px] h-[35px] rounded-full overflow-hidden cursor-pointer border border-gray-300">
           <img
             src={user?.photo || avatar}
