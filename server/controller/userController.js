@@ -1,4 +1,6 @@
 import User from "../models/userSchema.js";
+import Booking from "../models/BookingSchema.js";
+import Doctor from '../models/DoctorSchema.js'
 
 
 // Updateing user details
@@ -116,3 +118,60 @@ export const getAllUser = async (req, res) => {
       });
   }
 };
+
+
+// get UserProfile
+export const getUserProfile = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const { password, ...rest} = user._doc;
+
+    res.status(200).json({
+      success: true,
+      message: "User profile fetched successfully",
+      data: {
+        ...rest
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch user profile",
+      error: error.message
+    })
+  }
+}
+
+
+//getting Appointments
+export const getMyAppointments = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ user: req.userId });
+    const doctorIds = bookings.map(el => el.doctor.id);
+    const doctors = await Doctor.find({ _id: { $in: doctorIds } });
+
+    res.status(200).json({  
+      success: true,
+      message: "Appointments fetched successfully",
+      data: {
+        doctors,
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch appointments",
+      error: error.message
+    })
+  }
+}
