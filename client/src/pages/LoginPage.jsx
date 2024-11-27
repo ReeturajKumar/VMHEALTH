@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import loginImage from '../assets/Login.jpg';
 import { BASE_URL } from "../config";
 import { toast } from "react-toastify";
@@ -11,10 +11,9 @@ const LoginPage = () => {
     email: "", 
     password: ""
   });
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location
-  const { dispatch } = useContext(authContext) || {};
+  const { dispatch } = useContext(authContext);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -23,25 +22,14 @@ const LoginPage = () => {
     });
   };
 
+
   const submitHandler = async (event) => {
     event.preventDefault();
-    setloading(true);
-
-    // Form Validation: email and password length
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      toast.error("Please enter a valid email address");
-      setloading(false);
-      return;
-    }
-    if (formData.password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
-      setloading(false);
-      return;
-    }
+    setLoading(true);
 
     try {
       const res = await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST',
+        method: 'post',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -50,34 +38,28 @@ const LoginPage = () => {
 
       const result = await res.json();
 
+      // Error handling for API response
       if (!res.ok) {
-        if (res.status === 401) {
-          throw new Error("Invalid email or password");
-        } else {
-          throw new Error(result.message || "Something went wrong");
-        }
+        throw new Error(result.message);
       }
 
-      // Dispatch login action
-      dispatch?.({
+      dispatch({
         type: 'LOGIN_SUCCESS',
         payload: {
-          user: result.user,
-          token: result.token,
-          role: result.role,  
+          user: result.data,
+          role: result.role,
+          token: result.token
         }
-      });
-      
-      toast.success(result.msg);
+      })
 
-      // Redirect user after successful login
-      const redirectPath = location.state?.from || '/'; // Redirect to previous page or homepage
-      navigate(redirectPath);
+      console.log(result);
+
+      setLoading(false);
+      toast.success(result.message);
+      navigate('/');
     } catch (error) {
-      const errorMsg = error.message || "An unexpected error occurred. Please try again.";
-      toast.error(errorMsg);
-    } finally {
-      setloading(false);
+      toast.error(error.message);
+      setLoading(false);
     }
   };
 

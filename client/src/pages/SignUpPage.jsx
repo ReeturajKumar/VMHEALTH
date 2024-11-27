@@ -34,7 +34,7 @@ const SignUpPage = () => {
     return regex.test(email);
   };
 
-  const handleFileInputChange = async (event) => {
+  const handleFileInputChange = async event => {
     const file = event.target.files[0];
 
     // Check file size (5MB limit)
@@ -52,6 +52,7 @@ const SignUpPage = () => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     // Validate email format
     if (!validateEmail(formData.email)) {
@@ -71,9 +72,6 @@ const SignUpPage = () => {
       return;
     }
 
-    // Set loading state
-    setLoading(true);
-
     try {
       const res = await fetch(`${BASE_URL}/auth/register`, {
         method: 'post',
@@ -83,19 +81,19 @@ const SignUpPage = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const {message} = await res.json();
 
       // Error handling for API response
       if (!res.ok) {
-        throw new Error(data.msg || "Something went wrong");
+        throw new Error(message);
       }
 
       setLoading(false);
-      toast.success(data.msg);
+      toast.success(message);
       navigate('/login');
     } catch (error) {
+      toast.error(error.message);
       setLoading(false);
-      toast.error(error.message || "An error occurred");
     }
   };
 
@@ -178,7 +176,7 @@ const SignUpPage = () => {
 
               <div className="mt-6">
                 <button
-                  disabled={loading}
+                  disabled={loading && true}
                   type="submit" className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-2xl px-4 py-3">
                   {loading ? <HashLoader color="#ffffff" size={35} /> : ' Create an Account'}
                 </button>
