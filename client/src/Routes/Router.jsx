@@ -8,7 +8,7 @@ import ContactUs from "./../pages/ContactUs";
 import AboutPage from "../pages/AboutPage";
 import MyAccount from "../Dashboard/user-account/MyAccount";
 import Dashboard from "../Dashboard/doctor-account/Dashboard";
-import ProtectedRoutes from './ProtectedRoutes';
+import ProtectedRoutes from './ProtectedRoutes.jsx';
 
 
 const Router = () => {
@@ -21,8 +21,8 @@ const Router = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/contact-us" element={<ContactUs />} />
       <Route path="/about" element={<AboutPage />} />
-      <Route path="/user/profile/me" element={<ProtectedRoutes allowedRoles={['patient']}><MyAccount /></ProtectedRoutes>} />
-      <Route path="/doctor/profile/me" element={<ProtectedRoutes allowedRoles={['doctor']}><Dashboard /></ProtectedRoutes>} />
+      <Route path="/users/profile/me" element={<ProtectedRoutes allowedRoles={['patient']}><MyAccount /></ProtectedRoutes>} />
+      <Route path="/doctors/profile/me" element={<ProtectedRoutes allowedRoles={['doctor']}><Dashboard /></ProtectedRoutes>} />
     </Routes>
   );
 };

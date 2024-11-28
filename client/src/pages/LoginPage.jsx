@@ -52,7 +52,6 @@ const LoginPage = () => {
         }
       })
 
-      console.log(result);
 
       setLoading(false);
       toast.success(result.message);

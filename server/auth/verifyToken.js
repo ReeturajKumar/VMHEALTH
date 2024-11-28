@@ -37,24 +37,42 @@ export const authenticate = async (req, res, next) => {
 };
 
 export const restrict = (roles) => async (req, res, next) => {
-  const userId = req.userId;
+  try {
+    const userId = req.userId;
 
-  let user;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
 
-  const patient = await User.findById(userId);
-  const doctor = await Doctor.findById(userId);
+    // Try to find the user in either collection.
+    const user = await User.findById(userId) || await Doctor.findById(userId);
 
-  if (patient) {
-    user = patient;
-  } else if (doctor) {
-    user = doctor;
-  }
+    // If user is not found, return 404.
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
 
-  if (!roles.includes(user.role)) {
-    return res.status(403).json({
+    // Check if the user's role is in the allowed roles array.
+    if (!roles.includes(user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+
+    // If role is valid, continue to the next middleware.
+    next();
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      message: "Access denied",
+      message: "Internal server error",
+      error: error.message,
     });
   }
-  next();
 };

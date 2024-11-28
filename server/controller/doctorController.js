@@ -1,4 +1,5 @@
 import Doctor from "../models/DoctorSchema.js";
+import Booking from "../models/BookingSchema.js";
 
 // updating doctor details
 export const updateDoctor = async (req, res) => {
@@ -134,3 +135,38 @@ export const getAllDoctor = async (req, res) => {
     });
   }
 };
+
+
+//geting doctor Profile
+export const getDoctorProfile = async (req, res) => {
+  const doctorId = req.userId;
+
+  try {
+    const doctor = await Doctor.findById(doctorId);
+
+    if (!doctor) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor not found",
+      });
+    }
+
+    const { password, ...rest} = doctor._doc;
+    const appointments = await Booking.find({ doctor: doctorId }).populate("patient");
+
+    res.status(200).json({
+      success: true,
+      message: "Doctor profile fetched successfully",
+      data: {
+        ...rest,
+        appointments
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch doctor profile",
+      error: error.message
+    })
+  }
+}
