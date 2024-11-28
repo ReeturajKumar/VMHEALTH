@@ -6,10 +6,9 @@ import uploadImageCloudinary from "../../utils/uploadCloudinary";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const Profile = ({user}) => {
-  const [, setSelectedFile] = useState(null);
+const Profile = ({ user }) => {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,8 +17,10 @@ const Profile = ({user}) => {
     gender: "",
     bloodType: "",
   });
-
+  const [error, setError] = useState(""); // State for blood type error
   const navigate = useNavigate();
+
+  const validBloodTypes = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
   useEffect(() => {
     setFormData({
@@ -27,15 +28,22 @@ const Profile = ({user}) => {
       email: user.email,
       photo: user.photo,
       gender: user.gender,
-      bloodType: user.bloodType
-    })
+      bloodType: user.bloodType,
+    });
   }, [user]);
 
-
   const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "bloodType" && !validBloodTypes.includes(value)) {
+      setError("Invalid Blood Type.");
+    } else {
+      setError("");
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -80,11 +88,17 @@ const Profile = ({user}) => {
       return;
     }
 
+    // Validate blood type
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
     // Set loading state
     setLoading(true);
 
     try {
-      const res = await fetch(`${BASE_URL}/user/${user._id}`, {
+      const res = await fetch(`${BASE_URL}/users/${user._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +116,7 @@ const Profile = ({user}) => {
 
       setLoading(false);
       toast.success(data.msg || "Profile updated successfully");
-      navigate("/user/profile/me");
+      navigate("/users/profile/me");
     } catch (error) {
       setLoading(false);
       toast.error(error.message || "An error occurred");
@@ -110,7 +124,7 @@ const Profile = ({user}) => {
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-6">
       <form onSubmit={submitHandler}>
         <div className="mb-5">
           <input
@@ -132,6 +146,8 @@ const Profile = ({user}) => {
             onChange={handleInputChange}
             className="w-full py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
             required
+            aria-readonly
+            readOnly
           />
         </div>
         <div className="mb-5">
@@ -154,6 +170,7 @@ const Profile = ({user}) => {
             className="w-full py-3 border-b border-solid border-[#0066ff61] focus:outline-none focus:border-b-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor cursor-pointer"
             required
           />
+          {error && <span className="text-red-500 text-sm">{error}</span>}
         </div>
         <div className="mb-5 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <label className="text-headingColor font-bold text-[16px]">
@@ -177,7 +194,7 @@ const Profile = ({user}) => {
             <figure className="w-[60px] h-[60px] rounded-full border-2 border-primaryColor flex items-center justify-center">
               <img
                 src={formData.photo}
-                alt=""
+                alt="profile"
                 className="w-full h-full rounded-full"
               />
             </figure>
@@ -196,7 +213,7 @@ const Profile = ({user}) => {
               htmlFor="customFile"
               className="absolute top-0 left-0 w-full h-full flex items-center justify-center px-3 py-2 text-[15px] leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg truncate cursor-pointer"
             >
-              Upload Photo
+              {selectedFile ? selectedFile.name : "Upload Photo"}
             </label>
           </div>
         </div>
@@ -207,11 +224,7 @@ const Profile = ({user}) => {
             type="submit"
             className="w-full bg-primaryColor text-white text-[18px] leading-[30px] rounded-2xl px-4 py-3"
           >
-            {loading ? (
-              <HashLoader color="#ffffff" size={25} />
-            ) : (
-              "Update Profile"
-            )}
+            {loading ? <HashLoader color="#ffffff" size={25} /> : "Update Profile"}
           </button>
         </div>
       </form>

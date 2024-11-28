@@ -157,21 +157,19 @@ export const getUserProfile = async (req, res) => {
 export const getMyAppointments = async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.userId });
-    const doctorIds = bookings.map(el => el.doctor.id);
+    const doctorIds = bookings.map((el) => el.doctor.id);
     const doctors = await Doctor.find({ _id: { $in: doctorIds } });
 
-    res.status(200).json({  
+    res.status(200).json({
       success: true,
       message: "Appointments fetched successfully",
-      data: {
-        doctors,
-      }
+      data: doctors,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: "Failed to fetch appointments",
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-}
+};
