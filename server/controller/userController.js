@@ -157,7 +157,8 @@ export const getUserProfile = async (req, res) => {
 export const getMyAppointments = async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.userId });
-    const doctorIds = bookings.map((el) => el.doctor.id);
+    const doctorIds = bookings.map((el) => el.doctor._id); // Use _id instead of id
+
     const doctors = await Doctor.find({ _id: { $in: doctorIds } });
 
     res.status(200).json({
