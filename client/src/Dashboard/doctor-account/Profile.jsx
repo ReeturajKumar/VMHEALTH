@@ -163,24 +163,26 @@ const Profile = ({doctorData}) => {
   };
 
   // Add time slot
-  const addTimeSlot = (e) => {
-    e.preventDefault();
+ // Add time slot
+const addTimeSlot = (e) => {
+  e.preventDefault();
 
-    addItem("timeSlots", {
-      day: "Sunaday",
-      startingTime: "10:00",
-      endingTime: "04:30",
-    });
-  };
+  addItem("timeSlots", {
+    day: "Sunday", // Corrected spelling
+    startingTime: "10:00",
+    endingTime: "16:30", // Ensure consistent time format (24-hour)
+  });
+};
 
-  const handleTimeSlot = (event, index) => {
-    handleReusableInputChangeFunc(event, "timeSlots", index);
-  };
+const handleTimeSlot = (event, index) => {
+  handleReusableInputChangeFunc(event, "timeSlots", index);
+};
 
-  const deleteTimeSlot = (e, index) => {
-    e.preventDefault();
-    deleteItem("timeSlots", index);
-  };
+const deleteTimeSlot = (e, index) => {
+  e.preventDefault();
+  deleteItem("timeSlots", index);
+};
+
   return (
     <div>
       <h2 className="text-headingColor font-bold text-[24px] leading-9 mb-10">
@@ -418,68 +420,69 @@ const Profile = ({doctorData}) => {
         </div>
 
         <div className="mb-5">
-          <p className="form__label mb-2">Time Slots*</p>
-          {formData.timeSlots?.map((item, index) => (
-            <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 md:grid-cols-4 mb-[30px] gap-5 ">
-                  <div>
-                    <p className="form_label">Day*</p>
-                    <select
-                      name="day"
-                      value={item.day}
-                      className="form_input py-3.5"
-                      onChange={(e) => handleTimeSlot(e, index)}
-                    >
-                      <option value="">Select</option>
-                      <option value="sunday">Sunday </option>
-                      <option value="monday"> Monday</option>
-                      <option value="tuesday"> Tuesday</option>
-                      <option value="wednesday"> Wednesday</option>
-                      <option value="thursday"> Thursday</option>
-                      <option value="friday"> Friday</option>
-                      <option value="saturday"> Saturday</option>
-                    </select>
-                  </div>
-                  <div>
-                    <p className="form_label">Starting Time*</p>
-                    <input
-                      type="time"
-                      name="startingTime"
-                      value={item.startingTime}
-                      className="form_input"
-                      onChange={(e) => handleTimeSlot(e, index)}
-                    />
-                  </div>
-                  <div>
-                    <p className="form_label">Ending Time*</p>
-                    <input
-                      type="time"
-                      name="endingTime"
-                      value={item.endingTime}
-                      className="form_input"
-                      onChange={(e) => handleTimeSlot(e, index)}
-                    />
-                  </div>
-                  <div className="flex items-center">
-                    <button
-                      onClick={(e) => deleteTimeSlot(e, index)}
-                      className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-6 mb-[30px] cursor-pointer"
-                    >
-                      <AiOutlineDelete />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={addTimeSlot}
-            className="bg-[#000] p-2 text-white text-[18px] h-fit cursor-pointer"
-          >
-            Add Time slot
-          </button>
+  <p className="form__label mb-2">Time Slots*</p>
+  {formData.timeSlots?.map((item, index) => (
+    <div key={index}>
+      <div>
+        <div className="grid grid-cols-2 md:grid-cols-4 mb-[30px] gap-5 ">
+          <div>
+            <p className="form_label">Day*</p>
+            <select
+              name="day"
+              value={item.day}
+              className="form_input py-3.5"
+              onChange={(e) => handleTimeSlot(e, index)}
+            >
+              <option value="">Select</option>
+              <option value="Sunday">Sunday</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+            </select>
+          </div>
+          <div>
+            <p className="form_label">Starting Time*</p>
+            <input
+              type="time"
+              name="startingTime"
+              value={item.startingTime}
+              className="form_input"
+              onChange={(e) => handleTimeSlot(e, index)}
+            />
+          </div>
+          <div>
+            <p className="form_label">Ending Time*</p>
+            <input
+              type="time"
+              name="endingTime"
+              value={item.endingTime}
+              className="form_input"
+              onChange={(e) => handleTimeSlot(e, index)}
+            />
+          </div>
+          <div className="flex items-center">
+            <button
+              onClick={(e) => deleteTimeSlot(e, index)}
+              className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-6 mb-[30px] cursor-pointer"
+            >
+              <AiOutlineDelete />
+            </button>
+          </div>
         </div>
+      </div>
+    </div>
+  ))}
+  <button
+    onClick={addTimeSlot}
+    className="bg-[#000] p-2 text-white text-[18px] h-fit cursor-pointer"
+  >
+    Add Time Slot
+  </button>
+</div>
+
 
         <div className="mb-5">
           <p className="form__label">About</p>

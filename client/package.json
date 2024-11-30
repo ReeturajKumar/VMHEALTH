@@ -18,6 +18,7 @@
     "react-spinners": "^0.14.1",
     "react-time-picker": "^7.0.0",
     "react-toastify": "^10.0.6",
+    "stripe": "^17.4.0",
     "swiper": "^11.1.14"
   },
   "devDependencies": {

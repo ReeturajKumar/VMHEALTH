@@ -1,60 +1,56 @@
-import { doctors } from "../../data/Doctor";
-import { useParams } from "react-router-dom";
-import { testimonials } from "../../data/Testimonial";
-import { formateDate } from './../../utils/formateDate';
-import { AiFillStar } from 'react-icons/ai';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+import avatar from "../../assets/avatar.png";
+import { formateDate } from "./../../utils/formateDate";
+import { AiFillStar } from "react-icons/ai";
 import { useState } from "react";
 import Feedback2 from "./Feedback2";
 
-const Feedback = () => {
-  const { id } = useParams();
-  const doctor = doctors.find((doc) => doc.id === id);
-
-
-  const [showFeedbackbackForm, setshowFeedbackbackForm] = useState(false)
+const Feedback = ({ reviews, totalRating }) => {
+  const [showFeedbackbackForm, setshowFeedbackbackForm] = useState(false);
 
   return (
-    <div className="mt-10">
-      <div className="mb-12">
-        <h4 className="text-[22px] leading-[32px] font-bold text-headingColor mb-6">
-          Experience Shared by Our Clients ({doctor?.totalRating || "N/A"})
+    <div>
+      <div className="mb-[50px]">
+        <h4 className="text-[22px] leading-[32px] font-bold text-headingColor mb-[30px]">
+          Experience Shared by Our Clients ({totalRating})
         </h4>
-        <div className="space-y-8">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="flex items-start gap-5 p-4 ">
-              <figure className="w-12 h-12">
-                <img src={testimonial.photo} alt={testimonial.name} className="w-full h-full rounded-full object-cover" />
+
+        {reviews?.map((review,index) => (
+          <div key={index} className="flex justify-between gap-10 mb-[30px]">
+            <div className="flex gap-3">
+              <figure className="w-10 h-10 rounded-full">
+                <img src={review?.user?.photo} alt="" />
               </figure>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
-                  <div>
-                    <h5 className="text-[18px] leading-6 text-primaryColor font-bold">
-                      {testimonial.name}
-                    </h5>
-                    <p className="text-[14px] leading-6 text-gray-500">
-                      {formateDate("10-28-2024")}
-                    </p>
-                  </div>
-                  <div className="flex gap-1">
-                    {Array.from({ length: Math.round(testimonial.rating) }).map((_, index) => (
-                      <AiFillStar key={index} color="#FEB60D" />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-[15px] leading-6 text-textColor font-medium">
-                  {testimonial.feedback} 
+
+              <div>
+                <h5 className="text-[18px] leading-[28px] font-bold text-headingColor">
+                  {review?.user?.name}
+                </h5>
+                <p className="text-[15px] leading-[25px] text-textColor">
+                  {formateDate(review?.createdAt)}
                 </p>
+                <p className="text-para mt-3 font-medium text-[15px]">{
+                  review?.reviewText}</p>
               </div>
             </div>
-          ))}
-        </div>
+
+            <div className="flex gap-3">
+              {[...Array(review?.rating).keys()].map((_, index) => (
+                <AiFillStar key={index} color="#FFC107" />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
-      {!showFeedbackbackForm && (<div className="text-center">
-        <button className="btn" onClick={() => setshowFeedbackbackForm(true)}>
-          Give Feedback
-        </button>
-      </div>)}
-      {showFeedbackbackForm && <Feedback2/>}
+      {!showFeedbackbackForm && (
+        <div className="text-center">
+          <button className="btn" onClick={() => setshowFeedbackbackForm(true)}>
+            Give Feedback
+          </button>
+        </div>
+      )}
+      {showFeedbackbackForm && <Feedback2 />}
     </div>
   );
 };
