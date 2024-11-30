@@ -9,6 +9,7 @@ import MyAccount from "../Dashboard/user-account/MyAccount";
 import Dashboard from "../Dashboard/doctor-account/Dashboard";
 import ProtectedRoutes from './ProtectedRoutes.jsx';
 import DoctorDetails from "../pages/Doctors/DoctorDetails.jsx";
+import Thankyou from "../pages/Thankyou.jsx";
 
 
 const Router = () => {
@@ -16,6 +17,7 @@ const Router = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/doctor" element={<Doctors />} />
+      <Route path="/checkout-success" element={<Thankyou/>} />
       <Route path="/doctor/:id" element={<DoctorDetails />} />
       <Route path="/register" element={<SignUpPage />} />
       <Route path="/login" element={<LoginPage />} />

@@ -1,6 +1,40 @@
 /* eslint-disable no-unused-vars */
+import { BASE_URL, token } from './../../config';
+import { toast } from 'react-toastify';
 /* eslint-disable react/prop-types */
 const SidePanel = ({ doctorId, ticketPrice, timeSlots }) => {
+
+  const bookingHandler = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/bookings/checkout-session/${doctorId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+
+        },
+      })
+
+      const data = await res.json();
+      if(!res.ok) {
+        throw new Error(data.message || 'Something went wrong. Please try again.');
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+
+
+
+
+
+
+
   const formatTime = (time) => {
     const [hour, minute] = time.split(":");
     const isPM = hour >= 12;
@@ -34,7 +68,7 @@ const SidePanel = ({ doctorId, ticketPrice, timeSlots }) => {
           ))}
         </ul>
       </div>
-      <button className="btn px-2 w-full rounded-full">Book an Appointment</button>
+      <button onClick={bookingHandler} className="btn px-2 w-full rounded-full">Book an Appointment</button>
     </div>
   );
 };
