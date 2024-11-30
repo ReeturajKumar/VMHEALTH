@@ -7,7 +7,7 @@ import StartIcon from '../../assets/Star.png';
 const DoctorCard = ({ doctor }) => {
   const {
     name,
-    avgRating,
+    averageRating,
     totalRating,
     specialization,
     photo,
@@ -43,7 +43,7 @@ const DoctorCard = ({ doctor }) => {
               alt="Rating Icon"
               className="w-4 h-4 lg:w-5 lg:h-5"
             />
-            {avgRating || 0}
+            {averageRating|| 0}
           </span>
           <span className="text-sm lg:text-base font-normal text-textColor">
             ({totalRating || 0})

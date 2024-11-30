@@ -1,16 +1,35 @@
-import User from  '../models/userSchema.js';
+import User from '../models/userSchema.js';
 import Doctor from '../models/DoctorSchema.js';
 import Booking from '../models/bookingSchema.js';
-import Stripe from 'stripe'
+import Stripe from 'stripe';
 
 export const getCheckoutSession = async (req, res) => {
   try {
-    // get curretly booked doctor
-    const doctor = await Doctor.findById(req.params.doctorId)
-    const user = await User.findById(req.userId)
+    // Extract date and time slot from request body
+    const { selectedDate, selectedTimeSlot } = req.body;
 
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+    // Validate date and time slot
+    if (!selectedDate || !selectedTimeSlot) {
+      return res.status(400).json({
+        success: false,
+        message: "Date and time slot are required.",
+      });
+    }
 
+    // Find the doctor and user
+    const doctor = await Doctor.findById(req.params.doctorId);
+    const user = await User.findById(req.userId);
+
+    if (!doctor || !user) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor or User not found.",
+      });
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -32,29 +51,32 @@ export const getCheckoutSession = async (req, res) => {
           quantity: 1,
         },
       ],
-    })
+    });
 
-
-    //create new booking 
+    // Create a new booking with date and time
     const booking = new Booking({
       doctor: doctor._id,
       user: user._id,
       ticketPrice: doctor.ticketPrice,
-      session: session.id
-    })
+      session: session.id,
+      selectedDate: new Date(selectedDate), // Ensure it's stored as a valid date
+      selectedTimeSlot, // Store the time slot string
+    });
 
-    await booking.save()
+    await booking.save();
 
-    res.status(200).json({ 
+    // Respond with the Stripe session URL
+    res.status(200).json({
       success: true,
       message: "Checkout session created successfully",
-      url: session.url 
-    })
+      url: session.url,
+    });
   } catch (error) {
+    console.error("Error creating checkout session:", error);
     res.status(500).json({
       success: false,
       message: "Failed to create checkout session",
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-}
+};

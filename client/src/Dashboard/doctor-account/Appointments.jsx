@@ -7,21 +7,12 @@ const Appointments = ({ appointments }) => {
     <table className="w-full text-left text-sm text-gray-500">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50">
         <tr>
-          <th scope="col" className="px-6 py-3">
-            Name
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Gender
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Payment
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Price
-          </th>
-          <th scope="col" className="px-6 py-3">
-            Booked on
-          </th>
+          <th scope="col" className="px-6 py-3">Name</th>
+          <th scope="col" className="px-6 py-3">Payment</th>
+          <th scope="col" className="px-6 py-3">Price</th>
+          <th scope="col" className="px-6 py-3">Booked on</th>
+          <th scope="col" className="px-6 py-3">Appointment Date</th>
+          <th scope="col" className="px-6 py-3">Time Slot</th>
         </tr>
       </thead>
 
@@ -39,29 +30,30 @@ const Appointments = ({ appointments }) => {
               />
               <div className="pl-3">
                 <div className="text-base font-semibold">{item.user.name}</div>
-                <div className="font-normal text-gray-500">
-                  {item.user.email}
-                </div>
               </div>
             </th>
 
-            <td className="px-6 py-4">{item.user.gender}</td>
             <td className="px-6 py-4">
-              {item.isPaid && (
+              {item.isPaid ? (
                 <div className="flex items-center">
                   <div className="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
                   Paid
                 </div>
-              )}
-              {!item.isPaid && (
+              ) : (
                 <div className="flex items-center">
                   <div className="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
                   Unpaid
                 </div>
               )}
             </td>
-            <td className="px-6 py-4">{item.ticketPrice}</td>
+            <td className="px-6 py-4">{item.ticketPrice || "N/A"}</td>
             <td className="px-6 py-4">{formateDate(item.createdAt)}</td>
+            <td className="px-6 py-4">
+              {item.selectedDate ? formateDate(item.selectedDate) : "Not provided"}
+            </td>
+            <td className="px-6 py-4">
+              {item.selectedTimeSlot || "Not provided"}
+            </td>
           </tr>
         ))}
       </tbody>
