@@ -3,38 +3,42 @@ import Doctor from "../models/DoctorSchema.js";
 import User from "../models/userSchema.js";
 
 export const authenticate = async (req, res, next) => {
-  //token from header
+  // Token from header
   const authToken = req.headers.authorization;
 
-  //check token is exist
+  // Check if token exists
   if (!authToken || !authToken.startsWith("Bearer ")) {
     return res.status(401).json({
       success: false,
       message: "Access token not found",
+      code: "TOKEN_NOT_FOUND", // Custom error code
     });
   }
 
   try {
     const token = authToken.split(" ")[1];
 
-    //verify token
+    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     req.userId = decoded.id;
     req.role = decoded.role;
-    next();
+    next(); // Proceed to the next middleware or route
   } catch (error) {
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,
         message: "Access token expired",
+        code: "TOKEN_EXPIRED", // Custom error code
       });
     }
     return res.status(401).json({
       success: false,
       message: "Invalid access token",
+      code: "INVALID_TOKEN", // Custom error code
     });
   }
 };
+
 
 export const restrict = (roles) => async (req, res, next) => {
   try {

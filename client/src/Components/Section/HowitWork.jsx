@@ -27,7 +27,7 @@ const HowitWork = () => {
             <p className='text-[16px] leading-7 text-center text-textColor mt-4 font-[400]'>
             Connect with top medical experts across specialties for personalized, world-class care tailored to your needs.
             </p>
-            <Link to="/doctors" className="w-[44px] h-[44px]   items-center justify-center rounded-full border border-solid border-[#181A1E] mt-[30px] mx-auto flex hover:bg-primaryColor hover:border-none">
+            <Link to="/doctor" className="w-[44px] h-[44px]   items-center justify-center rounded-full border border-solid border-[#181A1E] mt-[30px] mx-auto flex hover:bg-primaryColor hover:border-none">
             <BsArrowRightShort className='group-hover:text-white w-6 h-5' />
             </Link>
           </div>
@@ -44,7 +44,7 @@ const HowitWork = () => {
             <p className='text-[16px] leading-7 text-center text-textColor mt-4 font-[400]'>
             Discover nearby medical facilities offering expert care, ensuring convenient access to world-class healthcare services.
             </p>
-            <Link to="/doctors" className="w-[44px] h-[44px]   items-center justify-center rounded-full border border-solid border-[#181A1E] mt-[30px] mx-auto flex hover:bg-primaryColor hover:border-none">
+            <Link to="/doctor" className="w-[44px] h-[44px]   items-center justify-center rounded-full border border-solid border-[#181A1E] mt-[30px] mx-auto flex hover:bg-primaryColor hover:border-none">
             <BsArrowRightShort className='group-hover:text-white w-6 h-5' />
             </Link>
           </div>
@@ -61,7 +61,7 @@ const HowitWork = () => {
             <p className='text-[16px] leading-7 text-center text-textColor mt-4 font-[400]'>
             Schedule appointments easily with trusted doctors, ensuring timely, convenient access to expert healthcare services.
             </p>
-            <Link to="/doctors" className="w-[44px] h-[44px]   items-center justify-center rounded-full border border-solid border-[#181A1E] mt-[30px] mx-auto flex hover:bg-primaryColor hover:border-none">
+            <Link to="/doctor" className="w-[44px] h-[44px]   items-center justify-center rounded-full border border-solid border-[#181A1E] mt-[30px] mx-auto flex hover:bg-primaryColor hover:border-none">
             <BsArrowRightShort className='group-hover:text-white w-6 h-5' />
             </Link>
           </div>

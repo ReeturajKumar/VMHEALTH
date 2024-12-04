@@ -47,15 +47,27 @@ reviewSchema.statics.calcAverageRatings = async function (doctorId) {
     },
   ]);
 
-  await Doctor.findByIdAndUpdate(doctorId, {
-    totalRating: stats[0].numOfRating,
-    averageRating: stats[0].avgRating,
-  });
-}
+  if (stats.length > 0) {
+    // Round avgRating to 1 decimal place
+    const avgRating = stats[0].avgRating.toFixed(1);
 
+    await Doctor.findByIdAndUpdate(doctorId, {
+      totalRating: stats[0].numOfRating,
+      averageRating: avgRating, // Store the rounded value
+    });
+  } else {
+    // If no reviews, set default values
+    await Doctor.findByIdAndUpdate(doctorId, {
+      totalRating: 0,
+      averageRating: 0,
+    });
+  }
+};
 
+// Trigger calcAverageRatings after a review is saved
 reviewSchema.post("save", function () {
   this.constructor.calcAverageRatings(this.doctor);
 });
+
 
 export default mongoose.model("Review", reviewSchema);

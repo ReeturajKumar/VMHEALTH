@@ -10,7 +10,7 @@ const ServiceCard = ({ item: { name, desc, bgColor, textColor }, index = 0 }) =>
 
       <div className="flex items-center justify-between mt-6">
         <Link
-          to="/doctors"
+          to="/doctor"
           className="flex items-center justify-center w-11 h-11 rounded-full border border-[#181A1E] transition-colors hover:bg-primaryColor hover:border-transparent"
           aria-label={`View more about ${name}`}
         >

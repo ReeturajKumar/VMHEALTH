@@ -156,17 +156,52 @@ export const getUserProfile = async (req, res) => {
 //getting Appointments
 export const getMyAppointments = async (req, res) => {
   try {
+    // Fetch all bookings for the logged-in user
     const bookings = await Booking.find({ user: req.userId });
-    const doctorIds = bookings.map((el) => el.doctor._id); // Use _id instead of id
 
-    const doctors = await Doctor.find({ _id: { $in: doctorIds } });
+    // If no bookings are found
+    if (bookings.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No appointments found for this user.",
+      });
+    }
 
+    // Extract doctor IDs and attach the date and time slot with each booking
+    const doctorAppointments = await Promise.all(
+      bookings.map(async (booking) => {
+        const doctor = await Doctor.findById(booking.doctor);
+        
+        if (!doctor) {
+          return null; // In case the doctor is not found, ignore this booking
+        }
+
+        // Return the doctor with the corresponding date and time
+        return {
+          doctor: {
+            _id: doctor._id,
+            name: doctor.name,
+            bio: doctor.bio,
+            photo: doctor.photo,
+            ticketPrice: doctor.ticketPrice,
+          },
+          selectedDate: booking.selectedDate,
+          selectedTimeSlot: booking.selectedTimeSlot,
+        };
+      })
+    );
+
+    // Filter out any null values in case some doctors were not found
+    const validAppointments = doctorAppointments.filter((appointment) => appointment !== null);
+
+    // Respond with the appointments
     res.status(200).json({
       success: true,
       message: "Appointments fetched successfully",
-      data: doctors,
+      data: validAppointments,
     });
   } catch (error) {
+    console.error("Error fetching appointments:", error);
     return res.status(500).json({
       success: false,
       message: "Failed to fetch appointments",
